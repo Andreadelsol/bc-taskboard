@@ -760,16 +760,10 @@ async function sendChat() {
 
   const summary = buildSummary();
   const key = getApiKey();
-  if (!key && !window.storage) {
-    typing.remove();
-    addMsg('No API key set. Go to Settings → API key to add yours.', 'ai');
-    return;
-  }
-
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method:'POST',
-      headers:{'Content-Type':'application/json', ...(key?{'x-api-key':key}:{})},
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         model:'claude-sonnet-4-6', max_tokens:600,
         system:`You are Andrea's Bench Clearers marketing assistant. Today is ${new Date().toDateString()}. You help with tasks, priorities, and marketing decisions for a retro hockey apparel brand. Be warm, concise, and practical — 2-5 sentences max unless more detail is asked for. Current task board:\n\n${summary}`,
@@ -824,9 +818,9 @@ async function extractTasks() {
   const prompt = `Extract ONLY Andrea's (Andrea del Sol Seda Riveros) action items from these meeting notes. Return ONLY a raw JSON array — no explanation, no markdown, no backticks.\n\nFormat: [{"text":"short action item","cat":"urgent|week|creative|waiting|backlog"}]\n\nurgent=today or tomorrow, week=this week, creative=design/content/visual, waiting=blocked on someone else, backlog=future/no firm deadline\n\nNotes:\n${notes.substring(0,7000)}`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/claude', {
       method:'POST',
-      headers:{'Content-Type':'application/json', ...(key?{'x-api-key':key}:{})},
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user',content:prompt}]})
     });
     if (!res.ok) throw new Error(`API error ${res.status}`);
