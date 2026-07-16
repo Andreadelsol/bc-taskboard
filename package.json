@@ -1,0 +1,12 @@
+{
+  "name": "bc-taskboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bench Clearers task board with a small Express proxy for Anthropic API calls",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
